@@ -78,11 +78,11 @@ function CameraCapture({ onImageCaptured, loading }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-4 justify-center">
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={loading}
-          className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base md:text-lg"
         >
           📁 Upload Image
         </button>
@@ -90,14 +90,14 @@ function CameraCapture({ onImageCaptured, loading }) {
           <button
             onClick={startCamera}
             disabled={loading}
-            className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base md:text-lg"
           >
             📷 Use Camera
           </button>
         ) : (
           <button
             onClick={stopCamera}
-            className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-colors"
+            className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-colors text-base md:text-lg"
           >
             Stop Camera
           </button>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import CameraCapture from './components/CameraCapture'
 import ManualInput from './components/ManualInput'
 import SolutionDisplay from './components/SolutionDisplay'
+import QRCodeAccess from './components/QRCodeAccess'
 import './App.css'
 
 function App() {
@@ -62,17 +63,22 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-gray-800 dark:text-white mb-2">
+      <div className="container mx-auto px-4 py-4 md:py-8">
+        <header className="text-center mb-4 md:mb-8">
+          <h1 className="text-3xl md:text-5xl font-bold text-gray-800 dark:text-white mb-2">
             PhotoChem
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300">
             Your Chemistry Problem Solver
           </p>
         </header>
 
         <div className="max-w-4xl mx-auto">
+          {/* Show QR code on desktop only - check if window is available */}
+          {typeof window !== 'undefined' && window.innerWidth > 768 && (
+            <QRCodeAccess />
+          )}
+
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 mb-6">
             <CameraCapture 
               onImageCaptured={handleImageProcessed}
