@@ -2,10 +2,7 @@ import { useState, useRef } from 'react'
 
 function CameraCapture({ onImageCaptured, loading }) {
   const [imagePreview, setImagePreview] = useState(null)
-  const [useCamera, setUseCamera] = useState(false)
   const fileInputRef = useRef(null)
-  const videoRef = useRef(null)
-  const canvasRef = useRef(null)
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0]
@@ -19,119 +16,32 @@ function CameraCapture({ onImageCaptured, loading }) {
     }
   }
 
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' } 
-      })
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream
-        setUseCamera(true)
-      }
-    } catch (err) {
-      console.error('Error accessing camera:', err)
-      alert('Unable to access camera. Please check permissions.')
-    }
-  }
-
-  const stopCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const stream = videoRef.current.srcObject
-      const tracks = stream.getTracks()
-      tracks.forEach(track => track.stop())
-      videoRef.current.srcObject = null
-      setUseCamera(false)
-    }
-  }
-
-  const capturePhoto = () => {
-    if (videoRef.current && canvasRef.current) {
-      const canvas = canvasRef.current
-      const video = videoRef.current
-      
-      // Set canvas dimensions to match video
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
-      
-      // Draw video frame to canvas
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-      
-      // Convert canvas to blob and create file
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const file = new File([blob], 'capture.jpg', { type: 'image/jpeg' })
-          const reader = new FileReader()
-          reader.onloadend = () => {
-            setImagePreview(reader.result)
-          }
-          reader.readAsDataURL(file)
-          onImageCaptured(file)
-          stopCamera()
-        } else {
-          console.error('Failed to capture image from canvas')
-          alert('Failed to capture image. Please try again.')
-        }
-      }, 'image/jpeg', 0.9)
-    }
-  }
-
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <div className="flex justify-center">
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={loading}
-          className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base md:text-lg"
+          className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-lg"
         >
           📁 Upload Image
         </button>
-        {!useCamera ? (
-          <button
-            onClick={startCamera}
-            disabled={loading}
-            className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base md:text-lg"
-          >
-            📷 Use Camera
-          </button>
-        ) : (
-          <button
-            onClick={stopCamera}
-            className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-colors text-base md:text-lg"
-          >
-            Stop Camera
-          </button>
-        )}
       </div>
 
       <input
         ref={fileInputRef}
         type="file"
         accept="image/*"
+        capture="environment"
         onChange={handleFileSelect}
         className="hidden"
       />
 
-      {useCamera && (
-        <div className="space-y-4">
-          <div className="relative bg-black rounded-lg overflow-hidden">
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              className="w-full max-h-96 object-contain"
-            />
-          </div>
-          <button
-            onClick={capturePhoto}
-            className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-colors"
-          >
-            Capture Photo
-          </button>
-        </div>
-      )}
+      <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+        Click to upload an image or take a photo from your device
+      </p>
 
-      {imagePreview && !useCamera && (
+      {imagePreview && (
         <div className="mt-4">
           <img
             src={imagePreview}
@@ -140,8 +50,6 @@ function CameraCapture({ onImageCaptured, loading }) {
           />
         </div>
       )}
-
-      <canvas ref={canvasRef} className="hidden" />
 
       {loading && (
         <div className="text-center py-4">
