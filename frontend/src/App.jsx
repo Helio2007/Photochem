@@ -74,11 +74,6 @@ function App() {
         </header>
 
         <div className="max-w-4xl mx-auto">
-          {/* Show QR code on desktop only - check if window is available */}
-          {typeof window !== 'undefined' && window.innerWidth > 768 && (
-            <QRCodeAccess />
-          )}
-
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 mb-6">
             <CameraCapture 
               onImageCaptured={handleImageProcessed}
@@ -105,9 +100,14 @@ function App() {
           )}
 
           {solution && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 mb-6">
               <SolutionDisplay solution={solution} />
             </div>
+          )}
+
+          {/* Mobile Access - shown after solution, collapsible */}
+          {typeof window !== 'undefined' && window.innerWidth > 768 && (
+            <QRCodeAccess />
           )}
         </div>
       </div>
